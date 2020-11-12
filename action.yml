@@ -1,0 +1,34 @@
+name: 'Looking for changes'
+description: 'Looking for changes for a specific folder'
+inputs:
+  path: 
+    description: 'Where to look for changes'
+    required: true
+outputs:
+  has-changes: 
+    description: "The folder has changes from the first commit in branch"
+    value: ${{ steps.check-files.outputs.has-changes }}
+runs:
+  using: "composite"
+  steps: 
+    - id: check-files
+      run: |
+          FOUND_MATCHES=false
+
+          git diff --name-only HEAD^ > files.txt
+
+          while IFS= read -r file
+          do
+          echo $file
+          if [[ $file == ${{ inputs.path }}* ]]; then
+              echo "This modified file is under the '${{ inputs.path }}' folder"
+              FOUND_MATCHES=true
+          fi
+          done < files.txt
+
+          if [[ $FOUND_MATCHES == true ]]; then 
+              echo "::set-output name=run_job::true"
+          else 
+              echo "::set-output name=run_job::false"
+          fi
+      shell: bash
