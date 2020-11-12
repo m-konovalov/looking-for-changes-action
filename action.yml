@@ -16,12 +16,11 @@ runs:
           FOUND_MATCHES=false
 
           git diff --name-only HEAD^ > files.txt
-
+          echo "This modified files are under the '${{ inputs.path }}' folder:
           while IFS= read -r file
           do
-          echo $file
           if [[ $file == ${{ inputs.path }}* ]]; then
-              echo "This modified file is under the '${{ inputs.path }}' folder"
+              echo $file
               FOUND_MATCHES=true
           fi
           done < files.txt
