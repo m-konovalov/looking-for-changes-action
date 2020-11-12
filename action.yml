@@ -7,7 +7,7 @@ inputs:
 outputs:
   has-changes: 
     description: "The folder has changes from the first commit in branch"
-    value: ${{ steps.check-files.outputs.has-changes }}
+    value: ${{ steps.check-files.outputs.folder-has-changes }}
 runs:
   using: "composite"
   steps: 
@@ -27,8 +27,8 @@ runs:
           done < files.txt
 
           if [[ $FOUND_MATCHES == true ]]; then 
-              echo "::set-output name=run_job::true"
+              echo "::set-output name=folder-has-changes::true"
           else 
-              echo "::set-output name=run_job::false"
+              echo "::set-output name=folder-has-changes::false"
           fi
       shell: bash
